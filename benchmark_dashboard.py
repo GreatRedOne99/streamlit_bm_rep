@@ -645,9 +645,9 @@ def main():
         """.format(metrics.get('win_rate', 0)), unsafe_allow_html=True)
     
     # Tabbed interface for different views
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "📈 Performance", "🎯 Portfolio Analytics", "🤖 ML Insights", 
-        "💼 Business Intelligence", "📊 Raw Data"
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+        "📈 Performance", "🎯 Portfolio Analytics", "🤖 ML Insights",
+        "💼 Business Intelligence", "📊 Raw Data", "📖 User Guide"
     ])
     
     with tab1:
@@ -1173,17 +1173,17 @@ def main():
     
     with tab5:
         st.markdown("### 📊 Raw Data Explorer")
-        
+
         # Data table selector
         if data:
             table_name = st.selectbox(
                 "Select Data Table",
                 list(data.keys())
             )
-            
+
             if table_name in data:
                 st.dataframe(data[table_name], use_container_width=True)
-                
+
                 # Download button
                 csv = data[table_name].to_csv(index=False)
                 st.download_button(
@@ -1192,6 +1192,19 @@ def main():
                     file_name=f"{table_name}_{datetime.now().strftime('%Y%m%d')}.csv",
                     mime="text/csv"
                 )
+
+    with tab6:
+        st.markdown("### 📖 Dashboard User Guide")
+
+        # Load and display the user guide markdown
+        user_guide_path = Path("dashboard_user_guide.md")
+        if user_guide_path.exists():
+            with open(user_guide_path, 'r', encoding='utf-8') as f:
+                user_guide_content = f.read()
+            st.markdown(user_guide_content, unsafe_allow_html=True)
+        else:
+            st.error("User guide file not found. Please ensure 'dashboard_user_guide.md' is in the project directory.")
+            st.info("Expected location: dashboard_user_guide.md")
 
 if __name__ == "__main__":
     main()
